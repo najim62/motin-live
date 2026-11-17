@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risewatch – live creator growth</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,700&family=IBM+Plex+Mono:wght@500;700&family=Instrument+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f3eee3;--card:#fffaf0;--ink:#1c1a16;--mut:#6b655a;--line:#d9d0bd;--tom:#e4452a;--moss:#1f7a4d;--sun:#f0b429}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.45 "Instrument Sans",system-ui,sans-serif;background:var(--paper) radial-gradient(#d8cfba 1px,transparent 1.2px) 0 0/22px 22px}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 18px 70px}
+header{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:flex-end;margin-bottom:22px}
+h1{font:italic 800 clamp(38px,7vw,64px)/.95 Fraunces,serif;margin:0;letter-spacing:-2px}h1 i{color:var(--tom);font-style:normal}
+.tag{margin:8px 0 0;color:var(--mut);max-width:520px}
+.snd{font:700 15px "Instrument Sans";background:var(--ink);color:#fff6e0;border:0;border-radius:999px;padding:14px 22px;cursor:pointer;box-shadow:4px 4px 0 var(--tom);transition:transform .1s}
+.snd:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--tom)}.snd.on{background:var(--moss);box-shadow:4px 4px 0 var(--sun)}
+.top{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:22px}
+.box{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px}
+.hero{background:var(--tom);color:#fff;position:relative;overflow:hidden}
+.hero .lbl{font:700 12px "IBM Plex Mono";letter-spacing:2px;text-transform:uppercase;opacity:.9}
+.hero h2{font:800 clamp(28px,5vw,44px)/1 Fraunces,serif;margin:6px 0 12px;display:flex;align-items:center;gap:12px}
+.hero h2 img{width:56px;height:56px;border-radius:14px;border:2px solid #fff}
+.hero .big{font:700 22px "IBM Plex Mono";margin-top:12px}
+.feed h3,.how summary{font:700 12px "IBM Plex Mono";letter-spacing:2px;text-transform:uppercase;margin:0 0 10px}
+.feed ul{list-style:none;margin:0;padding:0;font-size:14px;max-height:190px;overflow:auto}
+.feed li{padding:7px 0;border-bottom:1px dashed var(--line)}.feed li b{color:var(--moss)}.feed time{color:var(--mut);font:12px "IBM Plex Mono";margin-right:6px}
+.empty{color:var(--mut)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.tab{font:700 14px "Instrument Sans";background:transparent;border:2px solid var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer;color:var(--ink)}
+.tab[aria-pressed=true]{background:var(--ink);color:#fff6e0}.tools small{margin-left:auto;color:var(--mut);font:12px "IBM Plex Mono"}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.card{padding:16px}.card.flash{animation:fl2 1.4s}@keyframes fl2{0%,30%{background:#d6f2c8}100%{background:var(--card)}}
+.who{display:flex;gap:12px;align-items:center;margin-bottom:12px}.who img{width:52px;height:52px;border-radius:14px;border:2px solid var(--ink)}
+.who b{font:800 20px/1.1 Fraunces,serif;display:block}.who span{color:var(--mut);font-size:13px}
+.pill{margin-left:auto;font:700 11px "IBM Plex Mono";border:2px solid var(--ink);border-radius:999px;padding:3px 8px;white-space:nowrap;background:var(--sun)}
+.pill.cool{background:#cfe3f5}.pill.wait{background:#eee6d2;color:var(--mut)}
+.tiles{display:flex;flex-wrap:wrap;gap:2px;align-items:center;font:700 clamp(20px,3.2vw,26px) "IBM Plex Mono";perspective:300px}
+.t{background:var(--ink);color:#fff6e0;border-radius:5px;padding:3px 6px;position:relative;display:inline-block}
+.t:after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#000a}.t.fl{animation:fp .5s}@keyframes fp{0%{transform:rotateX(90deg)}100%{transform:none}}
+.c{margin:0 1px;opacity:.6}.hero .t{background:#fff;color:var(--ink)}
+.cap{font-size:12px;color:var(--mut);margin:4px 0 12px}.hero .cap{color:#ffe9e3}
+.st{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:2px dashed var(--line);padding-top:12px}
+.st div{font-size:12px;color:var(--mut)}.st b{display:block;font:700 18px "IBM Plex Mono";color:var(--moss)}.st .goal{grid-column:1/3}.st .goal b{color:var(--ink);font-size:15px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:34px;margin-top:12px}.bars i{flex:1;background:var(--tom);border-radius:2px 2px 0 0;min-height:2px}
+.sk{height:250px;background:linear-gradient(90deg,#ece5d3,#f7f1e3,#ece5d3);background-size:200% 100%;animation:sh 1.2s infinite}@keyframes sh{to{background-position:-200% 0}}
+.how{margin-top:26px}.how summary{cursor:pointer}.how ul{margin:10px 0 0;padding-left:20px}.how li{margin:6px 0}
+footer{margin-top:22px;font-size:12px;color:var(--mut)}.err{color:#a1230f;margin-top:10px;font-size:13px}
+@media(max-width:800px){.top{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body><div class="wrap">
+<header><div><h1>Rise<i>.</i>watch</h1><p class="tag">Live YouTube growth for creators from the Motion leaderboard. Watch who is climbing fastest, right now.</p></div>
+<button class="snd" id="snd">🔇 Sound off · tap to turn on</button></header>
+<div class="top"><section class="box hero" id="hero"></section>
+<aside class="box feed"><h3>Live activity</h3><ul id="feed" aria-live="polite"><li class="empty">Waiting for the first subscriber jump…</li></ul></aside></div>
+<div class="tools"><button class="tab" data-s="rise" aria-pressed="true">🔥 Rising fastest</button><button class="tab" data-s="big" aria-pressed="false">Biggest</button><button class="tab" data-s="az" aria-pressed="false">A–Z</button><small id="upd">Loading…</small></div>
+<div class="grid" id="grid"><div class="box sk"></div><div class="box sk"></div><div class="box sk"></div></div>
+<div class="err" id="err"></div>
+<details class="box how"><summary>How to read this</summary><ul>
+<li><b>Big number:</b> the creator's public subscriber count. YouTube rounds it, so large channels move in big steps (for example +100K at once).</li>
+<li><b>Sound:</b> you hear a tune every time a count goes up, and a fanfare when a creator passes a round milestone.</li>
+<li><b>Gaining per hour:</b> average growth over the history we've stored (up to 24h). Views are exact, so they're the most reliable signal.</li>
+<li><b>Heating up / Cooling down:</b> compares the last hour of views with the daily average. It needs about 3 hours of data.</li>
+<li><b>Next goal:</b> the next round number and a rough time to reach it at the current pace.</li></ul></details>
+<footer>Fan-made project, not affiliated with Motion or YouTube. Data comes from the YouTube Data API.</footer></div>
+<audio id="tune" src="musictune.mp3" preload="auto"></audio>
+<script>
+const $=id=>document.getElementById(id);let sound=false,sort="rise",prev={},shown={},feed=[],data=null,next=Date.now()+6e4;
+try{sound=false}catch(e){}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>{const a=Math.abs(n);if(a>=1e9)return+(n/1e9).toFixed(2)+"B";if(a>=1e6)return+(n/1e6).toFixed(a>=1e7?1:2)+"M";if(a>=1e3)return+(n/1e3).toFixed(a>=1e5?0:1)+"K";return Math.round(n)+""};
+const dur=h=>!isFinite(h)||h<=0?"—":h<1?Math.round(h*60)+" min":h<48?h.toFixed(1)+" hours":Math.round(h/24)+" days";
+function fanfare(){try{const c=new(window.AudioContext||window.webkitAudioContext)();[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.type="triangle";o.connect(g);g.connect(c.destination);const t=c.currentTime+i*.12;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.start(t);o.stop(t+.4)})}catch(e){}}
+const ding=()=>{if(sound)$("tune").cloneNode().play().catch(()=>{})};
+function analyse(c,hist){
+ const pts=hist.filter(h=>h.d[c.id]).map(h=>({t:h.t,s:h.d[c.id][0],v:h.d[c.id][1]})),o={pts,rate:null,vRate:null,accel:null};
+ if(pts.length<2)return o;const a=pts[0],b=pts[pts.length-1],hrs=(b.t-a.t)/36e5;if(hrs<.1)return o;
+ o.rate=(b.s-a.s)/hrs;o.vRate=(b.v-a.v)/hrs;
+ const r=pts.find(p=>p.t>=b.t-36e5),rh=(b.t-r.t)/36e5;if(hrs>=3&&rh>=.5&&o.vRate>0)o.accel=((b.v-r.v)/rh)/o.vRate;return o}
+function tiles(id,str){const old=shown[id]||"";shown[id]=str;
+ return[...str].map((ch,i)=>{if(ch===",")return'<span class="c">,</span>';const j=str.length-1-i,oc=old[old.length-1-j];
+  return`<span class="t${old&&oc!==ch?" fl":""}">${ch}</span>`}).join("")}
+function bars(pts){if(pts.length<4)return'<div class="cap">Trend chart appears after a few updates.</div>';
+ const st=Math.max(1,Math.floor(pts.length/24)),p=pts.filter((_,i)=>i%st===0),d=p.slice(1).map((x,i)=>Math.max(0,x.v-p[i].v)),m=Math.max(...d)||1;
+ return`<div class="bars" title="Views gained per update">${d.map(x=>`<i style="height:${Math.max(6,x/m*100)}%"></i>`).join("")}</div>`}
+function pill(a){if(a.accel==null)return'<span class="pill wait">Gathering data</span>';
+ return a.accel>=1.5?'<span class="pill">🔥 Heating up</span>':a.accel<.7?'<span class="pill cool">Cooling down</span>':'<span class="pill wait">Steady</span>'}
+function stats(c,a){const step=Math.pow(10,Math.floor(Math.log10(c.subs))),nx=Math.ceil((c.subs+1)/step)*step;
+ return`<div class="st"><div>Gaining<b>${a.rate==null?"…":"+"+fmt(a.rate)}</b>subs / hour</div><div>Views<b>${a.vRate==null?"…":"+"+fmt(a.vRate)}</b>per hour</div>
+ <div class="goal">Next goal<b>${fmt(nx)} subs · ${a.rate>0?"in about "+dur((nx-c.subs)/a.rate):"estimating…"}</b></div></div>`}
+function render(){if(!data)return;
+ const R=data.channels.map(c=>({c,a:analyse(c,data.history)}));
+ const rk=[...R].sort((x,y)=>(y.a.vRate??-1)-(x.a.vRate??-1)),top=rk[0];
+ R.sort((x,y)=>sort==="rise"?(y.a.vRate??-1)-(x.a.vRate??-1):sort==="big"?y.c.subs-x.c.subs:x.c.name.localeCompare(y.c.name));
+ if(top)$("hero").innerHTML=`<div class="lbl">Fastest rising right now</div><h2><img src="${esc(top.c.avatar)}" alt="">${esc(top.c.name)}</h2>
+  <div class="tiles">${tiles("h"+top.c.id,top.c.subs.toLocaleString("en-US"))}</div><div class="cap">subscribers</div>
+  <div class="big">${top.a.vRate==null?"Measuring growth… check back in a few minutes":"+"+fmt(top.a.vRate)+" views / hour"}</div>`;
+ $("grid").innerHTML=R.map(({c,a})=>`<article class="box card${c.flash?" flash":""}"><div class="who"><img src="${esc(c.avatar)}" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.handle||"")}</span></div>${pill(a)}</div>
+  <div class="tiles">${tiles(c.id,c.subs.toLocaleString("en-US"))}</div><div class="cap">subscribers</div>${stats(c,a)}${bars(a.pts)}</article>`).join("");
+ data.channels.forEach(c=>c.flash=false)}
+function log(c,d){const t=new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});feed.unshift(`<li><time>${t}</time><b>${esc(c.name)}</b> +${fmt(d)} subscribers</li>`);feed=feed.slice(0,8);$("feed").innerHTML=feed.join("")}
+async function load(){
+ try{const d=await(await fetch("/api/stats")).json();if(d.error)throw new Error(d.error);let up=false,mile=false;
+  d.channels.forEach(c=>{const p=prev[c.id];if(p!==undefined&&c.subs>p){c.flash=up=true;log(c,c.subs-p);const st=Math.pow(10,Math.floor(Math.log10(c.subs)));if(Math.floor(c.subs/st)>Math.floor(p/st))mile=true}prev[c.id]=c.subs});
+  data=d;render();if(up)ding();if(mile&&sound)fanfare();next=Date.now()+6e4;
+  $("err").textContent=(d.errors||[]).join(" | ")+(d.storage?"":" Growth history needs the Redis store (see README).")}
+ catch(e){$("err").textContent="Could not load data: "+e.message}}
+setInterval(()=>{$("upd").textContent="Next update in "+Math.max(0,Math.round((next-Date.now())/1e3))+"s"},1000);
+$("snd").onclick=()=>{sound=!sound;$("snd").textContent=sound?"🔊 Sound on · tap to mute":"🔇 Sound off · tap to turn on";$("snd").classList.toggle("on",sound);if(sound)ding()};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{sort=b.dataset.s;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
+load();setInterval(load,6e4);
+</script></body></html>
