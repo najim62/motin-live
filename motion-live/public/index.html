@@ -62,7 +62,7 @@ footer{margin-top:22px;font-size:12px;color:var(--mut)}.err{color:#a1230f;margin
 <footer>Fan-made project, not affiliated with Motion or YouTube. Data comes from the YouTube Data API.</footer></div>
 <audio id="tune" src="musictune.mp3" preload="auto"></audio>
 <script>
-const $=id=>document.getElementById(id);let sound=false,sort="rise",prev={},shown={},feed=[],data=null,next=Date.now()+6e4;
+const $=id=>document.getElementById(id);let sound=false,sort="rise",prev={},lastLoad=0,shown={},feed=[],data=null,next=Date.now()+6e4;
 try{sound=false}catch(e){}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>{const a=Math.abs(n);if(a>=1e9)return+(n/1e9).toFixed(2)+"B";if(a>=1e6)return+(n/1e6).toFixed(a>=1e7?1:2)+"M";if(a>=1e3)return+(n/1e3).toFixed(a>=1e5?0:1)+"K";return Math.round(n)+""};
@@ -87,9 +87,9 @@ function stats(c,a){const step=Math.pow(10,Math.floor(Math.log10(c.subs))),nx=Ma
  <div class="goal">Next goal<b>${fmt(nx)} subs · ${a.rate>0?"in about "+dur((nx-c.subs)/a.rate):"estimating…"}</b></div></div>`}
 function render(){if(!data)return;
  const R=data.channels.map(c=>({c,a:analyse(c,data.history)}));
- const rk=[...R].sort((x,y)=>(y.a.vRate??-1)-(x.a.vRate??-1)),top=rk[0];
- R.sort((x,y)=>sort==="rise"?(y.a.vRate??-1)-(x.a.vRate??-1):sort==="big"?y.c.subs-x.c.subs:x.c.name.localeCompare(y.c.name));
- if(top)$("hero").innerHTML=`<div class="lbl">Fastest rising right now</div><h2><img src="${esc(top.c.avatar)}" alt="">${esc(top.c.name)}</h2>
+ const rk=[...R].sort((x,y)=>(y.a.vRate??-1)-(x.a.vRate??-1)||y.c.subs-x.c.subs),top=rk[0];
+ R.sort((x,y)=>sort==="rise"?((y.a.vRate??-1)-(x.a.vRate??-1)||y.c.subs-x.c.subs):sort==="big"?y.c.subs-x.c.subs:x.c.name.localeCompare(y.c.name));
+ if(top)$("hero").innerHTML=`<div class="lbl">${top.a.vRate==null?"Biggest right now · measuring growth":"Fastest rising right now"}</div><h2><img src="${esc(top.c.avatar)}" alt="">${esc(top.c.name)}</h2>
   <div class="tiles">${tiles("h"+top.c.id,top.c.subs.toLocaleString("en-US"))}</div><div class="cap">subscribers</div>
   <div class="big">${top.a.vRate==null?"Measuring growth… check back in a few minutes":"+"+fmt(top.a.vRate)+" views / hour"}</div>`;
  $("grid").innerHTML=R.map(({c,a})=>`<article class="box card${c.flash?" flash":""}"><div class="who"><img src="${esc(c.avatar)}" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.handle||"")}</span></div>${pill(a)}</div>
@@ -97,8 +97,8 @@ function render(){if(!data)return;
  data.channels.forEach(c=>c.flash=false)}
 function log(c,d){const t=new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});feed.unshift(`<li><time>${t}</time><b>${esc(c.name)}</b> +${fmt(d)} subscribers</li>`);feed=feed.slice(0,8);$("feed").innerHTML=feed.join("")}
 async function load(){
- try{const d=await(await fetch("/api/stats")).json();if(d.error)throw new Error(d.error);let up=false,mile=false;
-  d.channels.forEach(c=>{const p=prev[c.id];if(p!==undefined&&c.subs>p){c.flash=up=true;log(c,c.subs-p);const st=Math.pow(10,Math.floor(Math.log10(c.subs)));if(Math.floor(c.subs/st)>Math.floor(p/st))mile=true}prev[c.id]=c.subs});
+ try{const d=await(await fetch("/api/stats")).json();if(d.error)throw new Error(d.error);let up=false,mile=false;const asleep=lastLoad&&Date.now()-lastLoad>150000;lastLoad=Date.now();
+  d.channels.forEach(c=>{const p=prev[c.id];if(p!==undefined&&c.subs>p&&!asleep){c.flash=up=true;log(c,c.subs-p);const st=Math.pow(10,Math.floor(Math.log10(c.subs)));if(Math.floor(c.subs/st)>Math.floor(p/st))mile=true}prev[c.id]=c.subs});
   data=d;render();if(up)ding();if(mile&&sound)fanfare();next=Date.now()+6e4;
   $("err").textContent=(d.errors||[]).join(" | ")+(d.storage?"":" Growth history needs the Redis store (see README).")}
  catch(e){$("err").textContent="Could not load data: "+e.message}}
