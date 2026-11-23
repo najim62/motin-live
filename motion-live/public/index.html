@@ -2,6 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Risewatch – live creator growth</title>
+<meta name="description" content="Live YouTube growth for creators from the Motion leaderboard. Fan-made.">
+<meta property="og:title" content="Risewatch – live creator growth"><meta property="og:description" content="See which creators are rising fastest, live."><meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,700&family=IBM+Plex+Mono:wght@500;700&family=Instrument+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#f3eee3;--card:#fffaf0;--ink:#1c1a16;--mut:#6b655a;--line:#d9d0bd;--tom:#e4452a;--moss:#1f7a4d;--sun:#f0b429}
@@ -71,27 +74,27 @@ function fanfare(){try{const c=new(window.AudioContext||window.webkitAudioContex
 const ding=()=>{if(sound)$("tune").cloneNode().play().catch(()=>{})};
 function analyse(c,hist){
  const pts=hist.filter(h=>h.d[c.id]).map(h=>({t:h.t,s:h.d[c.id][0],v:h.d[c.id][1]})),o={pts,rate:null,vRate:null,accel:null};
- if(pts.length<2)return o;const a=pts[0],b=pts[pts.length-1],hrs=(b.t-a.t)/36e5;if(hrs<.1)return o;
+ if(pts.length<2)return o;const a=pts[0],b=pts[pts.length-1],hrs=(b.t-a.t)/36e5;if(hrs<.5)return o;
  o.rate=(b.s-a.s)/hrs;o.vRate=(b.v-a.v)/hrs;
  const r=pts.find(p=>p.t>=b.t-36e5),rh=(b.t-r.t)/36e5;if(hrs>=3&&rh>=.5&&o.vRate>0)o.accel=((b.v-r.v)/rh)/o.vRate;return o}
 function tiles(id,str){const old=shown[id]||"";shown[id]=str;
  return[...str].map((ch,i)=>{if(ch===",")return'<span class="c">,</span>';const j=str.length-1-i,oc=old[old.length-1-j];
   return`<span class="t${old&&oc!==ch?" fl":""}">${ch}</span>`}).join("")}
 function bars(pts){if(pts.length<4)return'<div class="cap">Trend chart appears after a few updates.</div>';
- const st=Math.max(1,Math.floor(pts.length/24)),p=pts.filter((_,i)=>i%st===0),d=p.slice(1).map((x,i)=>Math.max(0,x.v-p[i].v)),m=Math.max(...d)||1;
+ const st=Math.max(1,Math.floor(pts.length/24)),p=pts.filter((_,i)=>i%st===0),d=p.slice(1).map((x,i)=>Math.max(0,x.v-p[i].v)),m=Math.max(...d)||1;if(!Math.max(...d))return'<div class="cap">No view changes recorded yet.</div>';
  return`<div class="bars" title="Views gained per update">${d.map(x=>`<i style="height:${Math.max(6,x/m*100)}%"></i>`).join("")}</div>`}
 function pill(a){if(a.accel==null)return'<span class="pill wait">Gathering data</span>';
  return a.accel>=1.5?'<span class="pill">🔥 Heating up</span>':a.accel<.7?'<span class="pill cool">Cooling down</span>':'<span class="pill wait">Steady</span>'}
 function stats(c,a){const step=Math.pow(10,Math.floor(Math.log10(c.subs))),nx=Math.ceil((c.subs+1)/step)*step;
- return`<div class="st"><div>Gaining<b>${a.rate==null?"…":"+"+fmt(a.rate)}</b>subs / hour</div><div>Views<b>${a.vRate==null?"…":"+"+fmt(a.vRate)}</b>per hour</div>
+ return`<div class="st"><div>Gaining<b>${a.rate==null?"Measuring…":a.rate>0?"+"+fmt(a.rate):"No change yet"}</b>subs / hour</div><div>Views<b>${a.vRate==null?"Measuring…":a.vRate>0?"+"+fmt(a.vRate):"No change yet"}</b>per hour</div>
  <div class="goal">Next goal<b>${fmt(nx)} subs · ${a.rate>0?"in about "+dur((nx-c.subs)/a.rate):"estimating…"}</b></div></div>`}
 function render(){if(!data)return;
  const R=data.channels.map(c=>({c,a:analyse(c,data.history)}));
  const rk=[...R].sort((x,y)=>(y.a.vRate??-1)-(x.a.vRate??-1)||y.c.subs-x.c.subs),top=rk[0];
  R.sort((x,y)=>sort==="rise"?((y.a.vRate??-1)-(x.a.vRate??-1)||y.c.subs-x.c.subs):sort==="big"?y.c.subs-x.c.subs:x.c.name.localeCompare(y.c.name));
- if(top)$("hero").innerHTML=`<div class="lbl">${top.a.vRate==null?"Biggest right now · measuring growth":"Fastest rising right now"}</div><h2><img src="${esc(top.c.avatar)}" alt="">${esc(top.c.name)}</h2>
+ if(top)$("hero").innerHTML=`<div class="lbl">${!(top.a.vRate>0)?"Biggest right now · measuring growth":"Fastest rising right now"}</div><h2><img src="${esc(top.c.avatar)}" alt="">${esc(top.c.name)}</h2>
   <div class="tiles">${tiles("h"+top.c.id,top.c.subs.toLocaleString("en-US"))}</div><div class="cap">subscribers</div>
-  <div class="big">${top.a.vRate==null?"Measuring growth… check back in a few minutes":"+"+fmt(top.a.vRate)+" views / hour"}</div>`;
+  <div class="big">${!(top.a.vRate>0)?"Measuring growth… check back in a while":"+"+fmt(top.a.vRate)+" views / hour"}</div>`;
  $("grid").innerHTML=R.map(({c,a})=>`<article class="box card${c.flash?" flash":""}"><div class="who"><img src="${esc(c.avatar)}" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.handle||"")}</span></div>${pill(a)}</div>
   <div class="tiles">${tiles(c.id,c.subs.toLocaleString("en-US"))}</div><div class="cap">subscribers</div>${stats(c,a)}${bars(a.pts)}</article>`).join("");
  data.channels.forEach(c=>c.flash=false)}
